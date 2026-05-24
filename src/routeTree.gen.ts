@@ -11,7 +11,13 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app.index'
+import { Route as AppTermsRouteImport } from './routes/_app.terms'
+import { Route as AppShippingRouteImport } from './routes/_app.shipping'
+import { Route as AppPrivacyRouteImport } from './routes/_app.privacy'
+import { Route as AppFaqRouteImport } from './routes/_app.faq'
+import { Route as AppContactRouteImport } from './routes/_app.contact'
 import { Route as AppCheckoutRouteImport } from './routes/_app.checkout'
+import { Route as AppAboutRouteImport } from './routes/_app.about'
 import { Route as AppShopIndexRouteImport } from './routes/_app.shop.index'
 import { Route as AppShopSlugRouteImport } from './routes/_app.shop.$slug'
 import { Route as AppOrderOrderIdRouteImport } from './routes/_app.order.$orderId'
@@ -25,9 +31,39 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppTermsRoute = AppTermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppShippingRoute = AppShippingRouteImport.update({
+  id: '/shipping',
+  path: '/shipping',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPrivacyRoute = AppPrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFaqRoute = AppFaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppContactRoute = AppContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppCheckoutRoute = AppCheckoutRouteImport.update({
   id: '/checkout',
   path: '/checkout',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAboutRoute = AppAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => AppRoute,
 } as any)
 const AppShopIndexRoute = AppShopIndexRouteImport.update({
@@ -48,13 +84,25 @@ const AppOrderOrderIdRoute = AppOrderOrderIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
+  '/about': typeof AppAboutRoute
   '/checkout': typeof AppCheckoutRoute
+  '/contact': typeof AppContactRoute
+  '/faq': typeof AppFaqRoute
+  '/privacy': typeof AppPrivacyRoute
+  '/shipping': typeof AppShippingRoute
+  '/terms': typeof AppTermsRoute
   '/order/$orderId': typeof AppOrderOrderIdRoute
   '/shop/$slug': typeof AppShopSlugRoute
   '/shop/': typeof AppShopIndexRoute
 }
 export interface FileRoutesByTo {
+  '/about': typeof AppAboutRoute
   '/checkout': typeof AppCheckoutRoute
+  '/contact': typeof AppContactRoute
+  '/faq': typeof AppFaqRoute
+  '/privacy': typeof AppPrivacyRoute
+  '/shipping': typeof AppShippingRoute
+  '/terms': typeof AppTermsRoute
   '/': typeof AppIndexRoute
   '/order/$orderId': typeof AppOrderOrderIdRoute
   '/shop/$slug': typeof AppShopSlugRoute
@@ -63,7 +111,13 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
+  '/_app/about': typeof AppAboutRoute
   '/_app/checkout': typeof AppCheckoutRoute
+  '/_app/contact': typeof AppContactRoute
+  '/_app/faq': typeof AppFaqRoute
+  '/_app/privacy': typeof AppPrivacyRoute
+  '/_app/shipping': typeof AppShippingRoute
+  '/_app/terms': typeof AppTermsRoute
   '/_app/': typeof AppIndexRoute
   '/_app/order/$orderId': typeof AppOrderOrderIdRoute
   '/_app/shop/$slug': typeof AppShopSlugRoute
@@ -71,13 +125,41 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/checkout' | '/order/$orderId' | '/shop/$slug' | '/shop/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/checkout'
+    | '/contact'
+    | '/faq'
+    | '/privacy'
+    | '/shipping'
+    | '/terms'
+    | '/order/$orderId'
+    | '/shop/$slug'
+    | '/shop/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/checkout' | '/' | '/order/$orderId' | '/shop/$slug' | '/shop'
+  to:
+    | '/about'
+    | '/checkout'
+    | '/contact'
+    | '/faq'
+    | '/privacy'
+    | '/shipping'
+    | '/terms'
+    | '/'
+    | '/order/$orderId'
+    | '/shop/$slug'
+    | '/shop'
   id:
     | '__root__'
     | '/_app'
+    | '/_app/about'
     | '/_app/checkout'
+    | '/_app/contact'
+    | '/_app/faq'
+    | '/_app/privacy'
+    | '/_app/shipping'
+    | '/_app/terms'
     | '/_app/'
     | '/_app/order/$orderId'
     | '/_app/shop/$slug'
@@ -104,11 +186,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/terms': {
+      id: '/_app/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof AppTermsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/shipping': {
+      id: '/_app/shipping'
+      path: '/shipping'
+      fullPath: '/shipping'
+      preLoaderRoute: typeof AppShippingRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/privacy': {
+      id: '/_app/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof AppPrivacyRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/faq': {
+      id: '/_app/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof AppFaqRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/contact': {
+      id: '/_app/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof AppContactRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/checkout': {
       id: '/_app/checkout'
       path: '/checkout'
       fullPath: '/checkout'
       preLoaderRoute: typeof AppCheckoutRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/about': {
+      id: '/_app/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AppAboutRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/shop/': {
@@ -136,7 +260,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteChildren {
+  AppAboutRoute: typeof AppAboutRoute
   AppCheckoutRoute: typeof AppCheckoutRoute
+  AppContactRoute: typeof AppContactRoute
+  AppFaqRoute: typeof AppFaqRoute
+  AppPrivacyRoute: typeof AppPrivacyRoute
+  AppShippingRoute: typeof AppShippingRoute
+  AppTermsRoute: typeof AppTermsRoute
   AppIndexRoute: typeof AppIndexRoute
   AppOrderOrderIdRoute: typeof AppOrderOrderIdRoute
   AppShopSlugRoute: typeof AppShopSlugRoute
@@ -144,7 +274,13 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAboutRoute: AppAboutRoute,
   AppCheckoutRoute: AppCheckoutRoute,
+  AppContactRoute: AppContactRoute,
+  AppFaqRoute: AppFaqRoute,
+  AppPrivacyRoute: AppPrivacyRoute,
+  AppShippingRoute: AppShippingRoute,
+  AppTermsRoute: AppTermsRoute,
   AppIndexRoute: AppIndexRoute,
   AppOrderOrderIdRoute: AppOrderOrderIdRoute,
   AppShopSlugRoute: AppShopSlugRoute,
@@ -159,3 +295,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
