@@ -60,7 +60,7 @@ function ProductPage() {
           </div>
           {product.gallery.length > 1 && (
             <div className="mt-3 flex gap-3">
-              {product.gallery.map((g, i) => (
+              {product.gallery.map((g: string, i: number) => (
                 <button
                   key={i}
                   onClick={() => setActive(i)}
@@ -100,7 +100,7 @@ function ProductPage() {
           <p className="mt-6 leading-relaxed text-muted-foreground">{product.description}</p>
 
           <ul className="mt-6 space-y-2.5">
-            {product.features.map((f) => (
+            {product.features.map((f: string) => (
               <li key={f} className="flex items-start gap-2.5 text-sm">
                 <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                 <span>{f}</span>

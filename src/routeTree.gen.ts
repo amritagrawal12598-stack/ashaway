@@ -11,8 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app.index'
+import { Route as AppCheckoutRouteImport } from './routes/_app.checkout'
 import { Route as AppShopIndexRouteImport } from './routes/_app.shop.index'
 import { Route as AppShopSlugRouteImport } from './routes/_app.shop.$slug'
+import { Route as AppOrderOrderIdRouteImport } from './routes/_app.order.$orderId'
 
 const AppRoute = AppRouteImport.update({
   id: '/_app',
@@ -21,6 +23,11 @@ const AppRoute = AppRouteImport.update({
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCheckoutRoute = AppCheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
   getParentRoute: () => AppRoute,
 } as any)
 const AppShopIndexRoute = AppShopIndexRouteImport.update({
@@ -33,30 +40,48 @@ const AppShopSlugRoute = AppShopSlugRouteImport.update({
   path: '/shop/$slug',
   getParentRoute: () => AppRoute,
 } as any)
+const AppOrderOrderIdRoute = AppOrderOrderIdRouteImport.update({
+  id: '/order/$orderId',
+  path: '/order/$orderId',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
+  '/checkout': typeof AppCheckoutRoute
+  '/order/$orderId': typeof AppOrderOrderIdRoute
   '/shop/$slug': typeof AppShopSlugRoute
   '/shop/': typeof AppShopIndexRoute
 }
 export interface FileRoutesByTo {
+  '/checkout': typeof AppCheckoutRoute
   '/': typeof AppIndexRoute
+  '/order/$orderId': typeof AppOrderOrderIdRoute
   '/shop/$slug': typeof AppShopSlugRoute
   '/shop': typeof AppShopIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
+  '/_app/checkout': typeof AppCheckoutRoute
   '/_app/': typeof AppIndexRoute
+  '/_app/order/$orderId': typeof AppOrderOrderIdRoute
   '/_app/shop/$slug': typeof AppShopSlugRoute
   '/_app/shop/': typeof AppShopIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/shop/$slug' | '/shop/'
+  fullPaths: '/' | '/checkout' | '/order/$orderId' | '/shop/$slug' | '/shop/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/shop/$slug' | '/shop'
-  id: '__root__' | '/_app' | '/_app/' | '/_app/shop/$slug' | '/_app/shop/'
+  to: '/checkout' | '/' | '/order/$orderId' | '/shop/$slug' | '/shop'
+  id:
+    | '__root__'
+    | '/_app'
+    | '/_app/checkout'
+    | '/_app/'
+    | '/_app/order/$orderId'
+    | '/_app/shop/$slug'
+    | '/_app/shop/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -79,6 +104,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/checkout': {
+      id: '/_app/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof AppCheckoutRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/shop/': {
       id: '/_app/shop/'
       path: '/shop'
@@ -93,17 +125,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppShopSlugRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/order/$orderId': {
+      id: '/_app/order/$orderId'
+      path: '/order/$orderId'
+      fullPath: '/order/$orderId'
+      preLoaderRoute: typeof AppOrderOrderIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
+  AppCheckoutRoute: typeof AppCheckoutRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppOrderOrderIdRoute: typeof AppOrderOrderIdRoute
   AppShopSlugRoute: typeof AppShopSlugRoute
   AppShopIndexRoute: typeof AppShopIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppCheckoutRoute: AppCheckoutRoute,
   AppIndexRoute: AppIndexRoute,
+  AppOrderOrderIdRoute: AppOrderOrderIdRoute,
   AppShopSlugRoute: AppShopSlugRoute,
   AppShopIndexRoute: AppShopIndexRoute,
 }
