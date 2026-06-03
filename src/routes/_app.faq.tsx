@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import logo from "@/assets/logo.png";
 
 const faqs = [
   { q: "How does the odor seal actually work?", a: "Each Ashaway has a fire-safe lining and a snap-shut lid with a gasket that traps smoke and odor. Once closed, it stays sealed until you toss it." },
@@ -35,6 +36,12 @@ function FAQPage() {
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{f.a}</p>
           </details>
         ))}
+      </div>
+
+      <div className="mt-12 md:hidden">
+        <div className="overflow-hidden rounded-3xl border border-border shadow-[var(--shadow-soft)] bg-background p-6">
+          <img src={logo} alt="Ashaway logo" className="mx-auto h-72 w-auto object-contain rounded-2xl shadow-[var(--shadow-ember)] bg-card/20" />
+        </div>
       </div>
     </div>
   );

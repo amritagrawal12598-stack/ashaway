@@ -85,16 +85,8 @@ function ProductPage() {
           <h1 className="mt-3 text-4xl font-extrabold tracking-tight md:text-5xl">{product.name}</h1>
           <p className="mt-2 text-lg text-muted-foreground">{product.tagline}</p>
 
-          <div className="mt-6 flex items-baseline gap-3">
+          <div className="mt-6">
             <span className="text-4xl font-extrabold">{formatINR(product.price)}</span>
-            {product.compareAt && (
-              <span className="text-lg text-muted-foreground line-through">{formatINR(product.compareAt)}</span>
-            )}
-            {product.compareAt && (
-              <span className="rounded-full bg-primary/15 px-2.5 py-1 text-xs font-bold text-primary">
-                Save {Math.round((1 - product.price / product.compareAt) * 100)}%
-              </span>
-            )}
           </div>
 
           <p className="mt-6 leading-relaxed text-muted-foreground">{product.description}</p>

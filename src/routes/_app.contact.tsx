@@ -64,7 +64,9 @@ function ContactPage() {
         </form>
 
         <div className="space-y-4">
-          <Info icon={Mail} title="Email" value="hello@ashaway.in" />
+          <a href="https://mail.google.com/mail/?view=cm&fs=1&to=ashaway3001@gmail.com" target="_blank" rel="noopener noreferrer" className="block hover:opacity-80 transition-opacity">
+            <Info icon={Mail} title="Email" value="ashaway3001@gmail.com" />
+          </a>
           <Info icon={Phone} title="Phone" value="+91 80 4567 8900" />
           <Info icon={MapPin} title="Office" value="Indiranagar, Bengaluru, India" />
         </div>

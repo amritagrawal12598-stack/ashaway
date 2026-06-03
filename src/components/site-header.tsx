@@ -4,9 +4,11 @@ import { useState } from "react";
 import { useCart } from "@/lib/cart-store";
 import logo from "@/assets/logo.png";
 
+
 const nav = [
   { to: "/", label: "Home" },
   { to: "/shop", label: "Shop" },
+  { to: "/track-order", label: "Track Order" },
   { to: "/about", label: "About" },
   { to: "/faq", label: "FAQ" },
   { to: "/contact", label: "Contact" },
@@ -20,10 +22,10 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5">
-        <Link to="/" className="flex items-center gap-2.5">
-          <img src={logo} alt="Ashaway" className="h-9 w-9 rounded-md object-cover" />
+        <Link to="/" className="flex items-center gap-2.5 brand" aria-label="Go to home" onClick={() => { if (typeof window !== 'undefined') window.location.href = '/'; }}>
           <span className="text-lg font-extrabold tracking-tight">
-            ASH<span className="text-primary">AWAY</span>
+            <span className="brand-ash">ASH</span>
+            <span className="brand-away text-primary">AWAY</span>
           </span>
         </Link>
         <nav className="hidden items-center gap-8 md:flex">
@@ -31,8 +33,8 @@ export function SiteHeader() {
             <Link
               key={n.to}
               to={n.to}
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-              activeProps={{ className: "text-foreground" }}
+              className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-all nav-glow"
+              activeProps={{ className: "bg-secondary text-foreground font-semibold shadow-sm" }}
               activeOptions={{ exact: n.to === "/" }}
             >
               {n.label}
@@ -53,10 +55,12 @@ export function SiteHeader() {
               </span>
             )}
           </button>
+
           <button
             onClick={() => setMobileOpen((v) => !v)}
             className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card md:hidden"
             aria-label="Toggle menu"
+            aria-expanded={mobileOpen}
           >
             {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
@@ -70,8 +74,8 @@ export function SiteHeader() {
                 key={n.to}
                 to={n.to}
                 onClick={() => setMobileOpen(false)}
-                className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground"
-                activeProps={{ className: "bg-secondary text-foreground" }}
+                className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-all nav-glow"
+                activeProps={{ className: "bg-secondary text-foreground font-semibold shadow-sm" }}
                 activeOptions={{ exact: n.to === "/" }}
               >
                 {n.label}

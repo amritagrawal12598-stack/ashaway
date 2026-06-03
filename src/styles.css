@@ -157,6 +157,110 @@
   }
 }
 
+/* Decorative moving thin orange line removed */
+
 @theme inline {
   --color-primary-glow: var(--primary-glow);
+}
+
+/* Flame hover effect for nav links */
+/* Removed decorative flame/bubble hover effect from links.
+   Keeping the class for potential future use without the animated pseudo-element. */
+.flame-hover {
+  position: relative;
+}
+
+@keyframes flame-rise {
+  0% {
+    transform: translateX(-50%) translateY(8px) scale(0.7);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-50%) translateY(-18px) scale(0.2);
+    opacity: 0;
+  }
+}
+
+.nav-glow {
+  transition: all 0.3s ease;
+}
+.nav-glow:hover {
+  background-color: color-mix(in oklch, var(--color-primary) 15%, transparent);
+  box-shadow: 0 0 15px color-mix(in oklch, var(--color-primary) 40%, transparent);
+  color: var(--color-foreground) !important;
+}
+
+/* Social icon colors */
+.social-icon {
+  display: inline-flex;
+  height: 2rem;
+  width: 2rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  transition: transform 150ms ease, opacity 150ms ease;
+}
+.social-icon svg {
+  stroke: #fff;
+}
+.social-icon:hover { transform: translateY(-2px); }
+.social-instagram {
+  background: radial-gradient(circle at 30% 10%, #feda75 0%, #fa7e1e 25%, #d62976 50%, #962fbf 75%, #4f5bd5 100%);
+}
+.social-mail {
+  background: linear-gradient(135deg, #D93025 0%, #EA4335 100%);
+}
+
+/* Brand hover: swap ASH and AWAY colors */
+.brand { display: inline-flex; align-items: center; }
+.brand .brand-ash {
+  color: var(--color-foreground);
+  transition: color 150ms ease;
+}
+.brand .brand-away {
+  color: var(--color-primary);
+  transition: color 150ms ease;
+}
+.brand:hover .brand-ash,
+.brand:focus-visible .brand-ash {
+  color: var(--color-primary);
+}
+.brand:hover .brand-away,
+.brand:focus-visible .brand-away {
+  color: var(--color-foreground);
+}
+
+/* Custom cigarette cursor for desktop (add /src/assets/cursor-cigarette.png) */
+/* Marketplace link hover/focus styles */
+.market-link {
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+  will-change: transform, box-shadow;
+  display: inline-flex;
+}
+.market-link:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: var(--shadow-soft);
+  background-color: color-mix(in srgb, var(--card) 85%, var(--primary) 3%);
+}
+.market-link:active { transform: translateY(-1px) scale(1.01); }
+.market-link:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .market-link, .market-link:hover, .market-link:active { transition: none; transform: none; }
+}
+
+/* Apply the decorative cigarette cursor only to the page background, not to interactive controls */
+html, body {
+  cursor: url('/src/assets/cursor-cigarette.png') 12 12, auto;
+}
+
+/* Ensure interactive elements always use the standard pointer cursor */
+a, button, input, textarea, [role="button"], .flame-hover, a.brand {
+  cursor: pointer;
 }

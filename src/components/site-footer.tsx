@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { Instagram, Mail } from "lucide-react";
 import logo from "@/assets/logo.png";
 
 export function SiteFooter() {
@@ -22,6 +23,7 @@ export function SiteFooter() {
             <h4 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Shop</h4>
             <ul className="mt-4 space-y-2 text-sm">
               <li><Link to="/shop" className="hover:text-primary">All products</Link></li>
+              <li><Link to="/track-order" className="hover:text-primary">Track order</Link></li>
               <li><Link to="/shop" className="hover:text-primary">Travel pack</Link></li>
               <li><Link to="/shop" className="hover:text-primary">Bulk box</Link></li>
             </ul>
@@ -39,8 +41,31 @@ export function SiteFooter() {
           </div>
         </div>
         <div className="mt-12 flex flex-col items-start justify-between gap-3 border-t border-border/60 pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center">
-          <p>© {new Date().getFullYear()} Ashaway. All rights reserved.</p>
-          <p>Made for smokers who care.</p>
+          <div className="flex items-center gap-4">
+            <p>© {new Date().getFullYear()} Ashaway. All rights reserved.</p>
+            <p className="hidden sm:block">Made for smokers who care.</p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <a
+              href="https://instagram.com/ashaway_co"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              className="social-icon social-instagram"
+            >
+              <Instagram className="h-4 w-4" />
+            </a>
+            <a
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=ashaway3001@gmail.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Email"
+              className="social-icon social-mail"
+            >
+              <Mail className="h-4 w-4" />
+            </a>
+          </div>
         </div>
       </div>
     </footer>

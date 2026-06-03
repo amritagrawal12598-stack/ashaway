@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Shield, Wind, Recycle, Sparkles, Package, Truck } from "lucide-react";
 import productHero from "@/assets/product-hero.jpg";
+import logo from "@/assets/logo.png";
 import productTrio from "@/assets/product-trio.jpg";
 import { products, formatINR } from "@/lib/products";
 import { useCart } from "@/lib/cart-store";
@@ -71,8 +72,10 @@ function HomePage() {
           </div>
           <div className="relative">
             <div className="absolute -inset-8 -z-10 rounded-[3rem] bg-gradient-to-tr from-primary/20 via-transparent to-primary/10 blur-2xl" />
-            <div className="overflow-hidden rounded-3xl border border-border shadow-[var(--shadow-soft)]">
-              <img src={productHero} alt="Ashaway disposable pocket ashtray" className="h-full w-full object-cover" width={1536} height={1536} />
+            <div className="hidden md:flex items-center justify-center h-96 md:h-[420px] md:col-span-2">
+              <div className="overflow-hidden rounded-3xl border border-border shadow-[var(--shadow-soft)] bg-background p-6">
+                <img src={logo} alt="Ashaway logo" className="mx-auto h-72 w-auto object-contain rounded-2xl shadow-[var(--shadow-ember)] bg-card/20" />
+              </div>
             </div>
           </div>
         </div>
@@ -101,13 +104,10 @@ function HomePage() {
       {/* HOW IT WORKS */}
       <section className="border-y border-border bg-card/30">
         <div className="mx-auto max-w-7xl px-5 py-20">
-          <div className="grid items-center gap-12 lg:grid-cols-2">
-            <div className="overflow-hidden rounded-3xl border border-border">
-              <img src={productTrio} alt="Three Ashaway pocket ashtrays" loading="lazy" className="w-full" width={1536} height={1024} />
-            </div>
+          <div className="grid items-center gap-12">
             <div>
-              <p className="text-xs font-bold uppercase tracking-widest text-primary">How it works</p>
-              <h2 className="mt-3 text-4xl font-extrabold tracking-tight md:text-5xl">Three steps. Zero mess.</h2>
+                <p className="text-xs font-bold uppercase tracking-widest text-primary">How it works</p>
+                  <h2 className="mt-3 text-4xl font-extrabold tracking-tight md:text-5xl">Four steps. Zero mess.</h2>
               <ol className="mt-8 space-y-5">
                 {steps.map((s, i) => (
                   <li key={s.title} className="flex gap-4">
@@ -126,46 +126,23 @@ function HomePage() {
         </div>
       </section>
 
-      {/* PRODUCTS */}
-      <section className="mx-auto max-w-7xl px-5 py-20">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-primary">Shop</p>
-            <h2 className="mt-2 text-4xl font-extrabold tracking-tight md:text-5xl">Pick your pack.</h2>
-          </div>
-          <Link to="/shop" className="text-sm font-semibold text-primary hover:underline">
-            View all →
-          </Link>
+      {/* Also buy from */}
+      <section className="mx-auto max-w-7xl px-5 py-12">
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="text-xs font-bold uppercase tracking-widest text-primary">Also buy from</p>
+          <h2 className="mt-3 text-3xl font-extrabold">Available on trusted marketplaces</h2>
+          <p className="mt-3 text-muted-foreground">Prefer a marketplace? Find Ashaway on these platforms.</p>
         </div>
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((p) => (
-            <article key={p.id} className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all hover:border-primary/50 hover:shadow-[var(--shadow-ember)]">
-              <Link to="/shop/$slug" params={{ slug: p.slug }} className="relative block aspect-square overflow-hidden bg-background">
-                <img src={p.image} alt={p.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" width={800} height={800} />
-                {p.badge && (
-                  <span className="absolute left-3 top-3 rounded-full bg-primary px-3 py-1 text-[11px] font-bold text-primary-foreground">
-                    {p.badge}
-                  </span>
-                )}
-              </Link>
-              <div className="flex flex-1 flex-col p-5">
-                <h3 className="text-lg font-bold">{p.name}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">{p.tagline}</p>
-                <div className="mt-4 flex items-baseline gap-2">
-                  <span className="text-2xl font-extrabold">{formatINR(p.price)}</span>
-                  {p.compareAt && (
-                    <span className="text-sm text-muted-foreground line-through">{formatINR(p.compareAt)}</span>
-                  )}
-                </div>
-                <button
-                  onClick={() => add(p.id)}
-                  className="mt-5 inline-flex items-center justify-center rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground transition-transform hover:scale-[1.02]"
-                >
-                  Add to cart
-                </button>
-              </div>
-            </article>
-          ))}
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+          <a href="https://www.amazon.in" target="_blank" rel="noopener noreferrer" className="market-link inline-flex items-center gap-3 rounded-2xl border border-border bg-card px-6 py-3">
+            <span className="font-semibold">Amazon</span>
+          </a>
+          <a href="https://www.flipkart.com" target="_blank" rel="noopener noreferrer" className="market-link inline-flex items-center gap-3 rounded-2xl border border-border bg-card px-6 py-3">
+            <span className="font-semibold">Flipkart</span>
+          </a>
+          <a href="https://www.meesho.com" target="_blank" rel="noopener noreferrer" className="market-link inline-flex items-center gap-3 rounded-2xl border border-border bg-card px-6 py-3">
+            <span className="font-semibold">Meesho</span>
+          </a>
         </div>
       </section>
 
@@ -173,13 +150,17 @@ function HomePage() {
       <section className="mx-auto max-w-7xl px-5 pb-20">
         <div className="relative overflow-hidden rounded-3xl border border-primary/30 p-10 md:p-16" style={{ background: "var(--gradient-ember)" }}>
           <div className="absolute inset-0 bg-gradient-to-br from-transparent via-black/10 to-black/40" />
-          <div className="relative grid items-center gap-8 md:grid-cols-[1fr,auto]">
-            <div>
-              <h2 className="text-4xl font-extrabold tracking-tight text-primary-foreground md:text-5xl">Buying for an event, bar, or fleet?</h2>
-              <p className="mt-3 max-w-xl text-primary-foreground/80">Save more with the bulk box. Twenty Ashaway pocket ashtrays, retail-ready.</p>
+          <div className="relative flex flex-col items-center gap-8 text-center md:flex-row md:text-left md:justify-between">
+            <div className="max-w-2xl">
+              <h2 className="text-3xl font-extrabold tracking-tight text-primary-foreground sm:text-4xl md:text-5xl">Buying for an event, bar, or fleet?</h2>
+              <p className="mt-3 text-lg text-primary-foreground/90">Save more with the bulk box. Twenty Ashaway pocket ashtrays, retail-ready.</p>
             </div>
-            <Link to="/shop/$slug" params={{ slug: best.slug }} className="inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3.5 text-sm font-bold text-background hover:opacity-90">
-              Shop bulk <ArrowRight className="h-4 w-4" />
+            <Link
+              to="/shop/$slug"
+              params={{ slug: best.slug }}
+              className="inline-flex shrink-0 items-center gap-2 rounded-full bg-foreground px-8 py-4 text-base font-bold text-background transition-transform hover:scale-[1.02]"
+            >
+              Shop bulk <ArrowRight className="h-5 w-5" />
             </Link>
           </div>
         </div>
@@ -205,6 +186,7 @@ const features = [
 ];
 
 const steps = [
+  { title: "Add water", desc: "Add a small amount of water — this activates the product. Do not skip." },
   { title: "Open & use", desc: "Flip the lid and ash like you normally would. Holds an entire session." },
   { title: "Seal it shut", desc: "Snap the lid closed. The odor-locking seal traps smoke and smell." },
   { title: "Dispose anywhere", desc: "Drop it in any bin. Mess-free, odor-free, guilt-free." },

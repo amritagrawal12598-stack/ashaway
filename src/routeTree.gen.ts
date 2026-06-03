@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app.index'
+import { Route as AppTrackOrderRouteImport } from './routes/_app.track-order'
 import { Route as AppTermsRouteImport } from './routes/_app.terms'
 import { Route as AppShippingRouteImport } from './routes/_app.shipping'
 import { Route as AppPrivacyRouteImport } from './routes/_app.privacy'
@@ -22,6 +23,7 @@ import { Route as AppAboutRouteImport } from './routes/_app.about'
 import { Route as AppShopIndexRouteImport } from './routes/_app.shop.index'
 import { Route as AppShopSlugRouteImport } from './routes/_app.shop.$slug'
 import { Route as AppOrderOrderIdRouteImport } from './routes/_app.order.$orderId'
+import { Route as AppShopCategoryPackSizeRouteImport } from './routes/_app.shop.category.$packSize'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -35,6 +37,11 @@ const AppRoute = AppRouteImport.update({
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTrackOrderRoute = AppTrackOrderRouteImport.update({
+  id: '/track-order',
+  path: '/track-order',
   getParentRoute: () => AppRoute,
 } as any)
 const AppTermsRoute = AppTermsRouteImport.update({
@@ -87,6 +94,11 @@ const AppOrderOrderIdRoute = AppOrderOrderIdRouteImport.update({
   path: '/order/$orderId',
   getParentRoute: () => AppRoute,
 } as any)
+const AppShopCategoryPackSizeRoute = AppShopCategoryPackSizeRouteImport.update({
+  id: '/shop/category/$packSize',
+  path: '/shop/category/$packSize',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
@@ -98,9 +110,11 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof AppPrivacyRoute
   '/shipping': typeof AppShippingRoute
   '/terms': typeof AppTermsRoute
+  '/track-order': typeof AppTrackOrderRoute
   '/order/$orderId': typeof AppOrderOrderIdRoute
   '/shop/$slug': typeof AppShopSlugRoute
   '/shop/': typeof AppShopIndexRoute
+  '/shop/category/$packSize': typeof AppShopCategoryPackSizeRoute
 }
 export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -111,10 +125,12 @@ export interface FileRoutesByTo {
   '/privacy': typeof AppPrivacyRoute
   '/shipping': typeof AppShippingRoute
   '/terms': typeof AppTermsRoute
+  '/track-order': typeof AppTrackOrderRoute
   '/': typeof AppIndexRoute
   '/order/$orderId': typeof AppOrderOrderIdRoute
   '/shop/$slug': typeof AppShopSlugRoute
   '/shop': typeof AppShopIndexRoute
+  '/shop/category/$packSize': typeof AppShopCategoryPackSizeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -127,10 +143,12 @@ export interface FileRoutesById {
   '/_app/privacy': typeof AppPrivacyRoute
   '/_app/shipping': typeof AppShippingRoute
   '/_app/terms': typeof AppTermsRoute
+  '/_app/track-order': typeof AppTrackOrderRoute
   '/_app/': typeof AppIndexRoute
   '/_app/order/$orderId': typeof AppOrderOrderIdRoute
   '/_app/shop/$slug': typeof AppShopSlugRoute
   '/_app/shop/': typeof AppShopIndexRoute
+  '/_app/shop/category/$packSize': typeof AppShopCategoryPackSizeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -144,9 +162,11 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/shipping'
     | '/terms'
+    | '/track-order'
     | '/order/$orderId'
     | '/shop/$slug'
     | '/shop/'
+    | '/shop/category/$packSize'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/sitemap.xml'
@@ -157,10 +177,12 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/shipping'
     | '/terms'
+    | '/track-order'
     | '/'
     | '/order/$orderId'
     | '/shop/$slug'
     | '/shop'
+    | '/shop/category/$packSize'
   id:
     | '__root__'
     | '/_app'
@@ -172,10 +194,12 @@ export interface FileRouteTypes {
     | '/_app/privacy'
     | '/_app/shipping'
     | '/_app/terms'
+    | '/_app/track-order'
     | '/_app/'
     | '/_app/order/$orderId'
     | '/_app/shop/$slug'
     | '/_app/shop/'
+    | '/_app/shop/category/$packSize'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -204,6 +228,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/track-order': {
+      id: '/_app/track-order'
+      path: '/track-order'
+      fullPath: '/track-order'
+      preLoaderRoute: typeof AppTrackOrderRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/terms': {
@@ -276,6 +307,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppOrderOrderIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/shop/category/$packSize': {
+      id: '/_app/shop/category/$packSize'
+      path: '/shop/category/$packSize'
+      fullPath: '/shop/category/$packSize'
+      preLoaderRoute: typeof AppShopCategoryPackSizeRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
@@ -287,10 +325,12 @@ interface AppRouteChildren {
   AppPrivacyRoute: typeof AppPrivacyRoute
   AppShippingRoute: typeof AppShippingRoute
   AppTermsRoute: typeof AppTermsRoute
+  AppTrackOrderRoute: typeof AppTrackOrderRoute
   AppIndexRoute: typeof AppIndexRoute
   AppOrderOrderIdRoute: typeof AppOrderOrderIdRoute
   AppShopSlugRoute: typeof AppShopSlugRoute
   AppShopIndexRoute: typeof AppShopIndexRoute
+  AppShopCategoryPackSizeRoute: typeof AppShopCategoryPackSizeRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -301,10 +341,12 @@ const AppRouteChildren: AppRouteChildren = {
   AppPrivacyRoute: AppPrivacyRoute,
   AppShippingRoute: AppShippingRoute,
   AppTermsRoute: AppTermsRoute,
+  AppTrackOrderRoute: AppTrackOrderRoute,
   AppIndexRoute: AppIndexRoute,
   AppOrderOrderIdRoute: AppOrderOrderIdRoute,
   AppShopSlugRoute: AppShopSlugRoute,
   AppShopIndexRoute: AppShopIndexRoute,
+  AppShopCategoryPackSizeRoute: AppShopCategoryPackSizeRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
@@ -316,3 +358,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
