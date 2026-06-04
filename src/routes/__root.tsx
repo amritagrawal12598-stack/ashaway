@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import logoUrl from "@/assets/logo.png";
 
 function NotFoundComponent() {
   return (
@@ -82,6 +83,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "theme-color", content: "#0d0d0d" },
     ],
     links: [
+      {
+        rel: "icon",
+        type: "image/png",
+        href: logoUrl,
+      },
       {
         rel: "stylesheet",
         href: appCss,
