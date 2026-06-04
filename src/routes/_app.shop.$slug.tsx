@@ -5,6 +5,9 @@ import { getProduct, formatINR, products } from "@/lib/products";
 import { useCart } from "@/lib/cart-store";
 
 export const Route = createFileRoute("/_app/shop/$slug")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    design: search.design as string | undefined,
+  }),
   loader: ({ params }) => {
     const product = getProduct(params.slug);
     if (!product) throw notFound();
@@ -40,6 +43,9 @@ export const Route = createFileRoute("/_app/shop/$slug")({
 
 function ProductPage() {
   const { product } = Route.useLoaderData();
+  const search = Route.useSearch();
+  const initialDesign = search.design && product.designs?.includes(search.design) ? search.design : (product.designs?.[0] || "Default");
+  const [design, setDesign] = useState(initialDesign);
   const [active, setActive] = useState(0);
   const [qty, setQty] = useState(1);
   const add = useCart((s) => s.add);
@@ -100,6 +106,23 @@ function ProductPage() {
             ))}
           </ul>
 
+          <div className="mt-8">
+            <p className="mb-2 text-sm font-bold uppercase tracking-widest text-muted-foreground">Design</p>
+            <div className="flex flex-wrap gap-3">
+              {product.designs?.map((d: string) => (
+                <button
+                  key={d}
+                  onClick={() => setDesign(d)}
+                  className={`rounded-xl border px-4 py-2 text-sm font-semibold transition-colors ${
+                    design === d ? "border-primary bg-primary/10 text-primary" : "border-border bg-card hover:border-primary/50"
+                  }`}
+                >
+                  {d}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <div className="inline-flex items-center rounded-full border border-border bg-card">
               <button onClick={() => setQty(Math.max(1, qty - 1))} className="px-3 py-3 text-muted-foreground hover:text-foreground" aria-label="Decrease">
@@ -111,7 +134,7 @@ function ProductPage() {
               </button>
             </div>
             <button
-              onClick={() => add(product.id, qty)}
+              onClick={() => add(product.id, design, qty)}
               className="flex-1 rounded-full bg-primary px-6 py-3.5 text-sm font-bold text-primary-foreground shadow-[var(--shadow-ember)] hover:opacity-90 sm:flex-initial sm:px-8"
             >
               Add to cart — {formatINR(product.price * qty)}

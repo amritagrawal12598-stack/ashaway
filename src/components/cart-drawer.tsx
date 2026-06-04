@@ -52,23 +52,24 @@ export function CartDrawer() {
             <div className="flex-1 overflow-y-auto px-5 py-4">
               <ul className="space-y-4">
                 {resolved.map((l) => (
-                  <li key={l.productId} className="flex gap-3 rounded-xl border border-border bg-card p-3">
+                  <li key={`${l.productId}-${l.design}`} className="flex gap-3 rounded-xl border border-border bg-card p-3">
                     <img src={l.product.image} alt={l.product.name} className="h-20 w-20 rounded-lg object-cover" />
                     <div className="flex flex-1 flex-col">
                       <div className="flex items-start justify-between gap-2">
                         <p className="text-sm font-semibold leading-tight">{l.product.name}</p>
-                        <button onClick={() => remove(l.productId)} aria-label="Remove" className="text-muted-foreground hover:text-destructive">
+                        <button onClick={() => remove(l.productId, l.design)} aria-label="Remove" className="text-muted-foreground hover:text-destructive">
                           <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
+                      <p className="text-xs text-muted-foreground mt-0.5 mb-0.5">Design: {l.design}</p>
                       <p className="text-xs text-muted-foreground">{formatINR(l.product.price)} each</p>
                       <div className="mt-auto flex items-center justify-between">
                         <div className="inline-flex items-center rounded-full border border-border">
-                          <button onClick={() => setQty(l.productId, l.qty - 1)} className="px-2 py-1 text-muted-foreground hover:text-foreground" aria-label="Decrease">
+                          <button onClick={() => setQty(l.productId, l.design, l.qty - 1)} className="px-2 py-1 text-muted-foreground hover:text-foreground" aria-label="Decrease">
                             <Minus className="h-3 w-3" />
                           </button>
                           <span className="w-7 text-center text-sm font-semibold">{l.qty}</span>
-                          <button onClick={() => setQty(l.productId, l.qty + 1)} className="px-2 py-1 text-muted-foreground hover:text-foreground" aria-label="Increase">
+                          <button onClick={() => setQty(l.productId, l.design, l.qty + 1)} className="px-2 py-1 text-muted-foreground hover:text-foreground" aria-label="Increase">
                             <Plus className="h-3 w-3" />
                           </button>
                         </div>

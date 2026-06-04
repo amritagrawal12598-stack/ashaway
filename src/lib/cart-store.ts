@@ -5,14 +5,15 @@ import { products, type Product } from "./products";
 export interface CartLine {
   productId: string;
   qty: number;
+  design: string;
 }
 
 interface CartState {
   lines: CartLine[];
   isOpen: boolean;
-  add: (productId: string, qty?: number) => void;
-  remove: (productId: string) => void;
-  setQty: (productId: string, qty: number) => void;
+  add: (productId: string, design: string, qty?: number) => void;
+  remove: (productId: string, design: string) => void;
+  setQty: (productId: string, design: string, qty: number) => void;
   clear: () => void;
   open: () => void;
   close: () => void;
@@ -24,25 +25,25 @@ export const useCart = create<CartState>()(
     (set) => ({
       lines: [],
       isOpen: false,
-      add: (productId, qty = 1) =>
+      add: (productId, design, qty = 1) =>
         set((s) => {
-          const existing = s.lines.find((l) => l.productId === productId);
+          const existing = s.lines.find((l) => l.productId === productId && l.design === design);
           if (existing) {
             return {
               lines: s.lines.map((l) =>
-                l.productId === productId ? { ...l, qty: l.qty + qty } : l,
+                l.productId === productId && l.design === design ? { ...l, qty: l.qty + qty } : l,
               ),
               isOpen: true,
             };
           }
-          return { lines: [...s.lines, { productId, qty }], isOpen: true };
+          return { lines: [...s.lines, { productId, design, qty }], isOpen: true };
         }),
-      remove: (productId) =>
-        set((s) => ({ lines: s.lines.filter((l) => l.productId !== productId) })),
-      setQty: (productId, qty) =>
+      remove: (productId, design) =>
+        set((s) => ({ lines: s.lines.filter((l) => !(l.productId === productId && l.design === design)) })),
+      setQty: (productId, design, qty) =>
         set((s) => ({
           lines: s.lines
-            .map((l) => (l.productId === productId ? { ...l, qty } : l))
+            .map((l) => (l.productId === productId && l.design === design ? { ...l, qty } : l))
             .filter((l) => l.qty > 0),
         })),
       clear: () => set({ lines: [] }),

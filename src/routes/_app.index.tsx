@@ -126,25 +126,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Also buy from */}
-      <section className="mx-auto max-w-7xl px-5 py-12">
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="text-xs font-bold uppercase tracking-widest text-primary">Also buy from</p>
-          <h2 className="mt-3 text-3xl font-extrabold">Available on trusted marketplaces</h2>
-          <p className="mt-3 text-muted-foreground">Prefer a marketplace? Find Ashaway on these platforms.</p>
-        </div>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-          <a href="https://www.amazon.in" target="_blank" rel="noopener noreferrer" className="market-link inline-flex items-center gap-3 rounded-2xl border border-border bg-card px-6 py-3">
-            <span className="font-semibold">Amazon</span>
-          </a>
-          <a href="https://www.flipkart.com" target="_blank" rel="noopener noreferrer" className="market-link inline-flex items-center gap-3 rounded-2xl border border-border bg-card px-6 py-3">
-            <span className="font-semibold">Flipkart</span>
-          </a>
-          <a href="https://www.meesho.com" target="_blank" rel="noopener noreferrer" className="market-link inline-flex items-center gap-3 rounded-2xl border border-border bg-card px-6 py-3">
-            <span className="font-semibold">Meesho</span>
-          </a>
-        </div>
-      </section>
+
 
       {/* CTA */}
       <section className="mx-auto max-w-7xl px-5 pb-20">

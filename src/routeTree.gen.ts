@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app.index'
-import { Route as AppTrackOrderRouteImport } from './routes/_app.track-order'
 import { Route as AppTermsRouteImport } from './routes/_app.terms'
 import { Route as AppShippingRouteImport } from './routes/_app.shipping'
 import { Route as AppPrivacyRouteImport } from './routes/_app.privacy'
@@ -37,11 +36,6 @@ const AppRoute = AppRouteImport.update({
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppTrackOrderRoute = AppTrackOrderRouteImport.update({
-  id: '/track-order',
-  path: '/track-order',
   getParentRoute: () => AppRoute,
 } as any)
 const AppTermsRoute = AppTermsRouteImport.update({
@@ -110,7 +104,6 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof AppPrivacyRoute
   '/shipping': typeof AppShippingRoute
   '/terms': typeof AppTermsRoute
-  '/track-order': typeof AppTrackOrderRoute
   '/order/$orderId': typeof AppOrderOrderIdRoute
   '/shop/$slug': typeof AppShopSlugRoute
   '/shop/': typeof AppShopIndexRoute
@@ -125,7 +118,6 @@ export interface FileRoutesByTo {
   '/privacy': typeof AppPrivacyRoute
   '/shipping': typeof AppShippingRoute
   '/terms': typeof AppTermsRoute
-  '/track-order': typeof AppTrackOrderRoute
   '/': typeof AppIndexRoute
   '/order/$orderId': typeof AppOrderOrderIdRoute
   '/shop/$slug': typeof AppShopSlugRoute
@@ -143,7 +135,6 @@ export interface FileRoutesById {
   '/_app/privacy': typeof AppPrivacyRoute
   '/_app/shipping': typeof AppShippingRoute
   '/_app/terms': typeof AppTermsRoute
-  '/_app/track-order': typeof AppTrackOrderRoute
   '/_app/': typeof AppIndexRoute
   '/_app/order/$orderId': typeof AppOrderOrderIdRoute
   '/_app/shop/$slug': typeof AppShopSlugRoute
@@ -162,7 +153,6 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/shipping'
     | '/terms'
-    | '/track-order'
     | '/order/$orderId'
     | '/shop/$slug'
     | '/shop/'
@@ -177,7 +167,6 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/shipping'
     | '/terms'
-    | '/track-order'
     | '/'
     | '/order/$orderId'
     | '/shop/$slug'
@@ -194,7 +183,6 @@ export interface FileRouteTypes {
     | '/_app/privacy'
     | '/_app/shipping'
     | '/_app/terms'
-    | '/_app/track-order'
     | '/_app/'
     | '/_app/order/$orderId'
     | '/_app/shop/$slug'
@@ -228,13 +216,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AppIndexRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/track-order': {
-      id: '/_app/track-order'
-      path: '/track-order'
-      fullPath: '/track-order'
-      preLoaderRoute: typeof AppTrackOrderRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/terms': {
@@ -325,7 +306,6 @@ interface AppRouteChildren {
   AppPrivacyRoute: typeof AppPrivacyRoute
   AppShippingRoute: typeof AppShippingRoute
   AppTermsRoute: typeof AppTermsRoute
-  AppTrackOrderRoute: typeof AppTrackOrderRoute
   AppIndexRoute: typeof AppIndexRoute
   AppOrderOrderIdRoute: typeof AppOrderOrderIdRoute
   AppShopSlugRoute: typeof AppShopSlugRoute
@@ -341,7 +321,6 @@ const AppRouteChildren: AppRouteChildren = {
   AppPrivacyRoute: AppPrivacyRoute,
   AppShippingRoute: AppShippingRoute,
   AppTermsRoute: AppTermsRoute,
-  AppTrackOrderRoute: AppTrackOrderRoute,
   AppIndexRoute: AppIndexRoute,
   AppOrderOrderIdRoute: AppOrderOrderIdRoute,
   AppShopSlugRoute: AppShopSlugRoute,

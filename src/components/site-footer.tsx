@@ -23,7 +23,6 @@ export function SiteFooter() {
             <h4 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Shop</h4>
             <ul className="mt-4 space-y-2 text-sm">
               <li><Link to="/shop" className="hover:text-primary">All products</Link></li>
-              <li><Link to="/track-order" className="hover:text-primary">Track order</Link></li>
               <li><Link to="/shop" className="hover:text-primary">Travel pack</Link></li>
               <li><Link to="/shop" className="hover:text-primary">Bulk box</Link></li>
             </ul>

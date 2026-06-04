@@ -17,6 +17,7 @@ export interface Product {
   features: string[];
   badge?: string;
   stock: number;
+  designs: string[];
 }
 
 export const products: Product[] = [
@@ -39,6 +40,7 @@ export const products: Product[] = [
       "Single-use, mess-free disposal",
     ],
     stock: 240,
+    designs: ["Classic Black", "Ember Orange", "Stealth Grey"],
   },
   {
     id: "p-pack5",
@@ -60,6 +62,7 @@ export const products: Product[] = [
     ],
     badge: "Best Seller",
     stock: 120,
+    designs: ["Classic Black", "Ember Orange", "Stealth Grey"],
   },
   {
     id: "p-pack20",
@@ -81,6 +84,7 @@ export const products: Product[] = [
     ],
     badge: "Best Value",
     stock: 60,
+    designs: ["Classic Black", "Ember Orange", "Stealth Grey"],
   },
 ];
 
