@@ -7,6 +7,7 @@ import { cartTotals, useCart } from "@/lib/cart-store";
 import { formatINR } from "@/lib/products";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import logoUrl from "@/assets/logo.png";
 
 const schema = z.object({
   email: z.string().email("Enter a valid email"),
@@ -39,48 +40,142 @@ function CheckoutPage() {
   const shipExtra = shipMethod === "express" ? 99 : 0;
   const finalTotal = total + shipExtra;
 
-  const onSubmit = (data: FormValues) => {
+  const onSubmit = async (data: FormValues) => {
     const orderId = `AW-${Date.now().toString(36).toUpperCase()}`;
+    const formatPDFPrice = (n: number) => "Rs. " + n.toLocaleString("en-IN");
+    const d = new Date();
+    const dateStr = `${d.getDate()} ${d.toLocaleString('default', { month: 'short' })} ${d.getFullYear()}`;
 
     // Generate PDF
     const doc = new jsPDF();
-    doc.setFontSize(20);
-    doc.text("Ashaway Order Request", 14, 22);
     
-    doc.setFontSize(11);
-    doc.setTextColor(100);
-    doc.text(`Order ID: ${orderId}`, 14, 32);
-    doc.text(`Date: ${new Date().toLocaleDateString()}`, 14, 38);
+    // Modern accents: Top colored border
+    doc.setFillColor(234, 88, 12); // Tailwind orange-600
+    doc.rect(0, 0, 210, 8, 'F'); // 210 is A4 width
     
-    doc.setTextColor(0);
-    doc.setFontSize(12);
-    doc.text("Customer Details:", 14, 50);
+    // Attempt to load and add logo on the right side
+    try {
+      const img = new Image();
+      img.src = logoUrl;
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+      });
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.drawImage(img, 0, 0);
+        const imgData = canvas.toDataURL("image/png");
+        let pdfWidth = 35;
+        let pdfHeight = (img.height * pdfWidth) / img.width;
+        if (pdfHeight > 15) {
+          pdfHeight = 15;
+          pdfWidth = (img.width * pdfHeight) / img.height;
+        }
+        doc.addImage(imgData, 'PNG', 210 - 14 - pdfWidth, 16, pdfWidth, pdfHeight);
+      }
+    } catch (err) {
+      console.warn("Could not load logo for PDF", err);
+    }
+
+    // Header Left
+    doc.setFontSize(26);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(234, 88, 12);
+    doc.text("INVOICE", 14, 25);
+    
     doc.setFontSize(10);
-    doc.text(`Name: ${data.fullName}`, 14, 56);
-    doc.text(`Email: ${data.email}`, 14, 62);
-    doc.text(`Phone: ${data.phone}`, 14, 68);
-    doc.text(`Address: ${data.address}, ${data.city}, ${data.state} - ${data.pincode}`, 14, 74);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(100);
+    doc.text(`Order Ref: ${orderId}`, 14, 32);
+    doc.text(`Generated: ${dateStr}`, 14, 37);
+
+    // Separator line
+    doc.setDrawColor(220);
+    doc.line(14, 45, 196, 45);
+
+    // Billed To
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(50);
+    doc.text("BILLED TO:", 14, 55);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(0);
+    doc.text(data.fullName, 14, 61);
+    doc.setTextColor(80);
+    doc.text(data.address, 14, 66);
+    doc.text(`${data.city}, ${data.state} - ${data.pincode}`, 14, 71);
+    doc.text(data.email, 14, 76);
+    doc.text(data.phone, 14, 81);
+
+    // From
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(50);
+    doc.text("FROM:", 120, 55);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(0);
+    doc.text("Ashaway Co.", 120, 61);
+    doc.setTextColor(80);
+    doc.text("Premium Disposable Ashtrays", 120, 66);
+    doc.text("ashaway3001@gmail.com", 120, 71);
 
     const tableData = resolved.map(l => [
       l.product.name,
       l.design,
       l.qty.toString(),
-      formatINR(l.product.price),
-      formatINR(l.subtotal)
+      formatPDFPrice(l.product.price),
+      formatPDFPrice(l.subtotal)
     ]);
 
-    // Add shipping and total rows
-    tableData.push(["", "", "", "Shipping", formatINR(shipping)]);
-    tableData.push(["", "", "", "Tax (18%)", formatINR(tax)]);
-    tableData.push(["", "", "", "Total", formatINR(finalTotal)]);
-
     autoTable(doc, {
-      startY: 85,
-      head: [['Product', 'Design', 'Qty', 'Price', 'Subtotal']],
+      startY: 95,
+      head: [['Product', 'Design', 'Qty', 'Price', 'Total']],
       body: tableData,
       theme: 'grid',
-      headStyles: { fillColor: [178, 48, 11] }, // Ashaway primary color roughly
+      headStyles: { fillColor: [234, 88, 12], textColor: [255, 255, 255], fontStyle: 'bold' },
+      styles: { font: 'helvetica', fontSize: 10, cellPadding: 6 },
+      alternateRowStyles: { fillColor: [249, 250, 251] }, // tailwind gray-50
+      columnStyles: {
+        0: { cellWidth: 50 },
+        4: { halign: 'right' }
+      }
     });
+
+    const finalY = (doc as any).lastAutoTable.finalY + 10;
+    
+    // Totals section
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(100);
+    doc.text("Subtotal:", 140, finalY);
+    doc.setTextColor(0);
+    doc.text(formatPDFPrice(subtotal), 196, finalY, { align: 'right' });
+
+    doc.setTextColor(100);
+    doc.text("Shipping:", 140, finalY + 7);
+    doc.setTextColor(0);
+    doc.text(formatPDFPrice(shipping), 196, finalY + 7, { align: 'right' });
+
+    doc.setTextColor(100);
+    doc.text("Tax (18%):", 140, finalY + 14);
+    doc.setTextColor(0);
+    doc.text(formatPDFPrice(tax), 196, finalY + 14, { align: 'right' });
+
+    doc.setDrawColor(220);
+    doc.line(140, finalY + 18, 196, finalY + 18);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.setTextColor(234, 88, 12);
+    doc.text("Grand Total:", 140, finalY + 25);
+    doc.text(formatPDFPrice(finalTotal), 196, finalY + 25, { align: 'right' });
+    
+    // Footer message
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(9);
+    doc.setTextColor(150);
+    doc.text("Thank you for your business. Please attach this invoice to your order email.", 105, 280, { align: 'center' });
 
     doc.save(`Ashaway_Order_${orderId}.pdf`);
 

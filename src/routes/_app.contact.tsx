@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 const schema = z.object({
   name: z.string().trim().min(2, "Required").max(100),
@@ -24,12 +25,27 @@ export const Route = createFileRoute("/_app/contact")({
 
 function ContactPage() {
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { register, handleSubmit, formState, reset } = useForm<Values>({ resolver: zodResolver(schema) });
 
-  const onSubmit = (_data: Values) => {
-    setSent(true);
-    reset();
-    setTimeout(() => setSent(false), 4000);
+  const onSubmit = async (data: Values) => {
+    setError(null);
+    const { error: dbError } = await supabase.from("contact_messages").insert([
+      {
+        name: data.name,
+        email: data.email,
+        message: data.message,
+      },
+    ]);
+
+    if (dbError) {
+      console.error("Error inserting message:", dbError);
+      setError("Failed to send message. Please try again or email us directly.");
+    } else {
+      setSent(true);
+      reset();
+      setTimeout(() => setSent(false), 5000);
+    }
   };
 
   return (
@@ -57,10 +73,11 @@ function ContactPage() {
             <textarea rows={5} {...register("message")} className={input} />
             {formState.errors.message && <p className="mt-1 text-xs text-destructive">{formState.errors.message.message}</p>}
           </div>
-          <button type="submit" className="w-full rounded-full bg-primary px-5 py-3 text-sm font-bold text-primary-foreground hover:opacity-90">
-            Send message
+          <button type="submit" disabled={formState.isSubmitting} className="w-full rounded-full bg-primary px-5 py-3 text-sm font-bold text-primary-foreground hover:opacity-90 disabled:opacity-50">
+            {formState.isSubmitting ? "Sending..." : "Send message"}
           </button>
-          {sent && <p className="text-center text-sm text-primary">Thanks — we'll get back within 1 business day.</p>}
+          {sent && <p className="text-center text-sm font-bold text-primary">Thanks — we'll get back within 1 business day.</p>}
+          {error && <p className="text-center text-sm font-bold text-destructive">{error}</p>}
         </form>
 
         <div className="space-y-4">
