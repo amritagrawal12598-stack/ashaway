@@ -77,6 +77,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "Premium disposable pocket ashtrays. Odor-locked, fire-safe, pocket-ready." },
       { name: "keywords", content: "Ashaway, disposable ashtray, pocket ashtray, smoke accessories, portable ashtray, fire-safe ashtray" },
       { name: "robots", content: "index, follow" },
+      { name: "google-site-verification", content: "fOoG312Svlil2bxpRcXpETgXnzl0YAkcdvEW-ENzrKQ" },
       { name: "author", content: "Ashaway" },
       { property: "og:title", content: "Ashaway" },
       { property: "og:description", content: "Smoke freely. Leave nothing behind." },
