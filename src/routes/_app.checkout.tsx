@@ -9,8 +9,7 @@ import { formatINR } from "@/lib/products";
 import { supabase } from "@/lib/supabase";
 
 export const processOrderFn = createServerFn({ method: "POST" })
-  .validator((data: any) => data)
-  .handler(async ({ data }) => {
+  .handler(async ({ data }: { data: any }) => {
     const { orderId, email, fullName, phone, address, city, state, pincode, finalTotal, resolved } = data;
 
     const shipping_address = `${address}, ${city}, ${state} - ${pincode}`;
