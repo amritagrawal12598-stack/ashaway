@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Mail, FileText, ArrowRight } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 import { formatINR } from "@/lib/products";
 
 interface LastOrder {
@@ -38,41 +38,24 @@ function OrderConfirmation() {
     }
   }, [orderId]);
 
-  const subject = encodeURIComponent(`New Order Request - ${orderId}`);
-  const body = encodeURIComponent(`Hi Ashaway team,\n\nI have attached my order PDF (${orderId}) to this email. Please review it and let me know the next steps.\n\nThank you!`);
-  const mailtoLink = `https://mail.google.com/mail/?view=cm&fs=1&to=ashaway3001@gmail.com&su=${subject}&body=${body}`;
-
   return (
     <div className="mx-auto max-w-2xl px-5 py-20 text-center">
-      <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-primary/15 text-primary">
-        <FileText className="h-10 w-10" />
+      <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-green-500/15 text-green-500">
+        <CheckCircle className="h-12 w-12" />
       </div>
       
       <h1 className="mt-6 text-4xl font-extrabold tracking-tight md:text-5xl">
-        Your Order PDF is Ready!
+        Order placed successfully!
       </h1>
       
       <p className="mt-4 text-lg text-muted-foreground">
-        Order <span className="font-mono font-bold text-foreground">{orderId}</span> has been generated and downloaded to your device.
+        Order <span className="font-mono font-bold text-foreground">{orderId}</span> has been sent to our team.
       </p>
 
       <div className="mt-12 rounded-2xl border border-primary/30 bg-primary/5 p-8">
-        <h2 className="text-2xl font-bold text-foreground">Next Step: Email us your order</h2>
+        <h2 className="text-2xl font-bold text-foreground">What happens next?</h2>
         <p className="mt-3 text-muted-foreground">
-          To complete your purchase, please email us the PDF you just downloaded. We will review your design choices and get back to you immediately to finalize everything.
-        </p>
-
-        <a
-          href={mailtoLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-8 flex w-full items-center justify-center gap-2 rounded-full bg-primary px-8 py-4 text-base font-bold text-primary-foreground shadow-[var(--shadow-ember)] transition-transform hover:scale-[1.02] sm:w-auto sm:inline-flex"
-        >
-          <Mail className="h-5 w-5" /> Send Order Email <ArrowRight className="h-4 w-4" />
-        </a>
-        
-        <p className="mt-4 text-sm font-bold text-destructive">
-          ⚠️ Don't forget to attach the downloaded PDF to the email!
+          We have officially received your automated order! Our team will review your order immediately and contact you via email or phone to finalize shipping and payment details.
         </p>
       </div>
 
