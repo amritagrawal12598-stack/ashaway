@@ -7,6 +7,9 @@ import { Mail, CheckCircle } from "lucide-react";
 import { cartTotals, useCart } from "@/lib/cart-store";
 import { formatINR } from "@/lib/products";
 import { supabase } from "@/lib/supabase";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import logoUrl from "@/assets/logo.png";
 
 export const processOrderFn = createServerFn({ method: "POST" })
   .handler(async ({ data }: { data: any }) => {
@@ -117,6 +120,143 @@ function CheckoutPage() {
     try {
       await processOrderFn({ data: { ...data, orderId, finalTotal, resolved } });
       
+      const formatPDFPrice = (n: number) => "Rs. " + n.toLocaleString("en-IN");
+      const d = new Date();
+      const dateStr = `${d.getDate()} ${d.toLocaleString('default', { month: 'short' })} ${d.getFullYear()}`;
+
+      // Generate PDF
+      const doc = new jsPDF();
+      
+      // Modern accents: Top colored border
+      doc.setFillColor(234, 88, 12); // Tailwind orange-600
+      doc.rect(0, 0, 210, 8, 'F'); // 210 is A4 width
+      
+      // Attempt to load and add logo on the right side
+      try {
+        const img = new Image();
+        img.src = logoUrl;
+        await new Promise((resolve, reject) => {
+          img.onload = resolve;
+          img.onerror = reject;
+        });
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.drawImage(img, 0, 0);
+          const imgData = canvas.toDataURL("image/png");
+          let pdfWidth = 35;
+          let pdfHeight = (img.height * pdfWidth) / img.width;
+          if (pdfHeight > 15) {
+            pdfHeight = 15;
+            pdfWidth = (img.width * pdfHeight) / img.height;
+          }
+          doc.addImage(imgData, 'PNG', 210 - 14 - pdfWidth, 16, pdfWidth, pdfHeight);
+        }
+      } catch (err) {
+        console.warn("Could not load logo for PDF", err);
+      }
+
+      // Header Left
+      doc.setFontSize(26);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(234, 88, 12);
+      doc.text("RECEIPT", 14, 25);
+      
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(100);
+      doc.text(`Order Ref: ${orderId}`, 14, 32);
+      doc.text(`Generated: ${dateStr}`, 14, 37);
+
+      // Separator line
+      doc.setDrawColor(220);
+      doc.line(14, 45, 196, 45);
+
+      // Billed To
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(50);
+      doc.text("BILLED TO:", 14, 55);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(0);
+      doc.text(data.fullName, 14, 61);
+      doc.setTextColor(80);
+      doc.text(data.address, 14, 66);
+      doc.text(`${data.city}, ${data.state} - ${data.pincode}`, 14, 71);
+      doc.text(data.email, 14, 76);
+      doc.text(data.phone, 14, 81);
+
+      // From
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(50);
+      doc.text("FROM:", 120, 55);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(0);
+      doc.text("Ashaway Co.", 120, 61);
+      doc.setTextColor(80);
+      doc.text("Premium Disposable Ashtrays", 120, 66);
+      doc.text("ashaway3001@gmail.com", 120, 71);
+
+      const tableData = resolved.map(l => [
+        l.product.name,
+        l.design,
+        l.qty.toString(),
+        formatPDFPrice(l.product.price),
+        formatPDFPrice(l.subtotal)
+      ]);
+
+      autoTable(doc, {
+        startY: 95,
+        head: [['Product', 'Design', 'Qty', 'Price', 'Total']],
+        body: tableData,
+        theme: 'grid',
+        headStyles: { fillColor: [234, 88, 12], textColor: [255, 255, 255], fontStyle: 'bold' },
+        styles: { font: 'helvetica', fontSize: 10, cellPadding: 6 },
+        alternateRowStyles: { fillColor: [249, 250, 251] }, // tailwind gray-50
+        columnStyles: {
+          0: { cellWidth: 50 },
+          4: { halign: 'right' }
+        }
+      });
+
+      const finalY = (doc as any).lastAutoTable.finalY + 10;
+      
+      // Totals section
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(100);
+      doc.text("Subtotal:", 140, finalY);
+      doc.setTextColor(0);
+      doc.text(formatPDFPrice(subtotal), 196, finalY, { align: 'right' });
+
+      doc.setTextColor(100);
+      doc.text("Shipping:", 140, finalY + 7);
+      doc.setTextColor(0);
+      doc.text(formatPDFPrice(shipping), 196, finalY + 7, { align: 'right' });
+
+      doc.setTextColor(100);
+      doc.text("Tax (18%):", 140, finalY + 14);
+      doc.setTextColor(0);
+      doc.text(formatPDFPrice(tax), 196, finalY + 14, { align: 'right' });
+
+      doc.setDrawColor(220);
+      doc.line(140, finalY + 18, 196, finalY + 18);
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(12);
+      doc.setTextColor(234, 88, 12);
+      doc.text("Grand Total:", 140, finalY + 25);
+      doc.text(formatPDFPrice(finalTotal), 196, finalY + 25, { align: 'right' });
+      
+      // Footer message
+      doc.setFont("helvetica", "italic");
+      doc.setFontSize(9);
+      doc.setTextColor(150);
+      doc.text("Thank you for your order! We have received your request and will contact you shortly.", 105, 280, { align: 'center' });
+
+      doc.save(`Ashaway_Receipt_${orderId}.pdf`);
+
       sessionStorage.setItem(
         "ashaway:last-order",
         JSON.stringify({ orderId, email: data.email, total: finalTotal, items: resolved.length }),
