@@ -10,31 +10,10 @@ import { supabase } from "@/lib/supabase";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import logoUrl from "@/assets/logo.png";
-import { useState } from "react";
-import { Turnstile } from "@marsidev/react-turnstile";
 
 export const processOrderFn = createServerFn({ method: "POST" })
   .handler(async ({ data }: { data: any }) => {
-    const { orderId, email, fullName, phone, address, city, state, pincode, finalTotal, resolved, turnstileToken } = data;
-
-    // Verify Turnstile Token
-    const turnstileSecret = process.env.TURNSTILE_SECRET_KEY;
-    if (!turnstileSecret) throw new Error("Missing TURNSTILE_SECRET_KEY");
-
-    const formData = new FormData();
-    formData.append("secret", turnstileSecret);
-    formData.append("response", turnstileToken);
-
-    const result = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-      body: formData,
-      method: "POST",
-    });
-
-    const outcome = await result.json();
-    if (!outcome.success) {
-      console.error("Turnstile failed:", outcome);
-      throw new Error("CAPTCHA verification failed");
-    }
+    const { orderId, email, fullName, phone, address, city, state, pincode, finalTotal, resolved } = data;
 
     const shipping_address = `${address}, ${city}, ${state} - ${pincode}`;
     
@@ -123,7 +102,6 @@ export const Route = createFileRoute("/_app/checkout")({
 
 function CheckoutPage() {
   const navigate = useNavigate();
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const lines = useCart((s) => s.lines);
   const clear = useCart((s) => s.clear);
   const { resolved, subtotal, shipping, tax, total } = cartTotals(lines);
@@ -137,15 +115,10 @@ function CheckoutPage() {
   const finalTotal = total + shipExtra;
 
   const onSubmit = async (data: FormValues) => {
-    if (!turnstileToken) {
-      setError("root", { message: "Please wait for the CAPTCHA to verify you are human." });
-      return;
-    }
-
     const orderId = `AW-${Date.now().toString(36).toUpperCase()}`;
 
     try {
-      await processOrderFn({ data: { ...data, orderId, finalTotal, resolved, turnstileToken } });
+      await processOrderFn({ data: { ...data, orderId, finalTotal, resolved } });
       
       const formatPDFPrice = (n: number) => "Rs. " + n.toLocaleString("en-IN");
       const d = new Date();
@@ -410,17 +383,9 @@ function CheckoutPage() {
               <span className="text-base font-extrabold">Total</span>
               <span className="text-base font-extrabold">{formatINR(finalTotal)}</span>
             </div>
-            <div className="mt-5 w-full flex justify-center">
-              <Turnstile
-                siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
-                onSuccess={(token) => setTurnstileToken(token)}
-                onError={() => setTurnstileToken(null)}
-                onExpire={() => setTurnstileToken(null)}
-              />
-            </div>
             <button
               type="submit"
-              disabled={formState.isSubmitting || !turnstileToken}
+              disabled={formState.isSubmitting}
               className="mt-5 flex w-full items-center justify-center rounded-full bg-primary px-5 py-3.5 text-sm font-bold text-primary-foreground shadow-[var(--shadow-ember)] hover:opacity-90 disabled:opacity-60"
             >
               {formState.isSubmitting ? "Placing Order..." : `Place Order`}
